@@ -1,0 +1,94 @@
+<html>
+<head>
+    <title>Welcom to WebSocket chat</title>
+    <script type="text/javascript">
+        var URL_PREFIX = "ws://";
+        var URL_SUFFIX = "websocket";
+
+        var wsUrl;
+        var input;
+        var output;
+        var connected = false;
+
+        function init() {
+            wsUrl = URL_PREFIX + window.location.host + window.location.href.toString().split(window.location.host)[1] + URL_SUFFIX;
+
+            input = document.getElementById("name");
+            output = document.getElementById("output");
+
+            input.onkeypress = function(e){
+                if (e.keyCode == 13){
+                    document.getElementById('connect').click();
+                }
+            }
+        }
+
+        function connectWebSocket() {
+            websocket = new WebSocket(wsUrl);
+            websocket.onopen = function(evt) { onOpen(evt) };
+            websocket.onclose = function(evt) { onClose(evt) };
+            websocket.onmessage = function(evt) { onMessage(evt) };
+            websocket.onerror = function(evt) { onError(evt) };
+
+            connected = true;
+        }
+
+        function onOpen(evt) {
+            writeToScreen("CONNECTED");
+            doSend(input.value);
+        }
+
+        function onClose(evt) {
+            writeToScreen("DISCONNECTED");
+
+            connected = false;
+        }
+
+        function onMessage(evt) {
+            try {
+                var msg = JSON.parse(evt.data);
+                writeToScreen('<span style="color: blue;">' + msg.user + ": " + msg.text + '</span>');
+            } catch (e) {
+                writeToScreen('<span style="color: green;">' + evt.data + '</span>');
+            }
+        }
+
+        function onError(evt) {
+            writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+        }
+
+        function doSend(message) {
+            websocket.send(message);
+            input.value = "";
+        }
+
+        function writeToScreen(message) {
+            var pre = document.createElement("p");
+            pre.style.wordWrap = "break-word";
+            pre.innerHTML = message;
+            output.appendChild(pre);
+        }
+
+        function connect() {
+            if (connected) {
+                doSend(input.value);
+            }
+            else {
+                document.getElementById("connect").value = "Post";
+                connectWebSocket();
+            }
+        }
+        
+        window.addEventListener("load", init, false);
+    </script>
+</head>
+<body>
+<div>
+    <div>
+        <input type="text" id="name"/>
+        <input type="button" id="connect" onclick="connect();" value="Connect" />
+    </div>
+    <div id="output"></div>
+</div>
+</body>
+</html>
