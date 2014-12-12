@@ -27,14 +27,12 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketConfi
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**").addResourceLocations("/");
+        registry.addResourceHandler("/**").addResourceLocations("/html/");
     }
 
     @Bean
     public ViewResolver getViewResolver() {
-        final InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setPrefix("/pages/");
-        return viewResolver;
+        return new InternalResourceViewResolver();
     }
 
     @Autowired

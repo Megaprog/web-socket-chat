@@ -10,6 +10,6 @@ public class IndexController {
 
     @RequestMapping("/")
     public String index() throws IOException {
-        return "index.html";
+        return "forward:/index.html";
     }
 }
