@@ -32,7 +32,9 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketConfi
 
     @Bean
     public ViewResolver getViewResolver() {
-        return new InternalResourceViewResolver();
+        final InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setPrefix("/pages/");
+        return viewResolver;
     }
 
     @Autowired
