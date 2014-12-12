@@ -10,9 +10,6 @@ public class IndexController {
 
     @RequestMapping("/")
     public String index() throws IOException {
-
-        System.out.println("!!!!!!!!!!!!!!!!!");
-
         return "index.html";
     }
 }
